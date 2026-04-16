@@ -209,8 +209,8 @@ def graficar_real_vs_predicho(
     # Pistas:
     #   - plt.scatter(y_real, y_pred, alpha=0.6)
     #   - Dibuja la línea de referencia perfecta: y = x
-    #   - Añade etiquetas a los ejes y título
-    #   - Guarda con plt.savefig(ruta_salida, dpi=150, bbox_inches='tight')
+    #   - Añade etiquetas a los ejes y títulosavefig(ruta_salida, dpi=150, bbox_inches='tight')
+    #   - Guarda con plt.
     # Creamos el scatterplot
     plt.scatter(y_real, y_pred, alpha=0.6, color="blue", label="Predicciones")
     # Buscamos la referencias minimas y maximas tanto en las variables predichas como reales

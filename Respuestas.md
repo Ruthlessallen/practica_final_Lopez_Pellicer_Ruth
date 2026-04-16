@@ -18,13 +18,13 @@ A. RESUMEN ESTRUCTURAL.
 B. ESTADÍSTICOS DESCRIPTIVOS DE VARIABLES NUMÉRICAS.
 
 1. He creado un csv con todos las estadísticas de las columnas en ej1_descriptivo.csv, incluyendo aquellas que no están en .describe() como la varianza, mediana, moda, iqr, skewness y kurtosis.
-2. Mi variable objetivo job_satisfaction_score tiene un IQR de 2.88, lo que indica que la mayoría de personas (el 50%) tienen una satisfacción laboral de entre 3.53 (P25) y 6.41(P75). Bastante baja en general, incluso suspendida.
-3. Skewness de job_satisfaction_score: 0.01. Prácticamente simétrico, no hay outliers e indica una característica de la distribución normal. Kurtosis: -0.45. Esto indica que hay muchos valores dispersos en los datos y no se concentran todos en la media, lo que nos muestra una kurtosis platicúrtica.
+2. Mi variable objetivo job_satisfaction_score tiene un IQR de 3.26, lo que indica que la mayoría de personas (el 50%) tienen una satisfacción laboral de entre 3.23 (P25) y 6.58(P75). Bastante baja en general, incluso suspendida.
+3. Skewness de job_satisfaction_score: 0.01. Prácticamente simétrico, no hay outliers e indica una característica de la distribución normal. Kurtosis: -0.71. Esto indica que hay muchos valores dispersos en los datos y no se concentran todos en la media, lo que nos muestra una kurtosis platicúrtica.
 
 C. DISTRIBUCIONES
 
 1. Explicadas en la pregunta 1.2.
-2. Según la variable objetivo, lo que podemos ver es que todas las vriables tienen la mediana en el centro, lo que indica una distribución normal, además, al estar relacionadas con un método de evaluación de 0 a 10 puntos, no se presencia desvariaciones exageradas. A nivel milimétrico vemos que la satisfacción sube en el tipo de trabajo IT, baja en el uso de RRSS como Facebook e Instagram.
+2. Según la variable objetivo, lo que podemos ver es que todas las variables tienen la mediana en el centro, lo que indica una distribución normal, además, al estar relacionadas con un método de evaluación de 0 a 10 puntos, no se presencia desvariaciones exageradas. A nivel milimétrico vemos que la satisfacción sube en el tipo de trabajo IT.
 3. Explicado en la pregunta 1.2.
 
 D. VARIABLES CATEGÓRICAS.
@@ -37,7 +37,7 @@ E. CORRELACIONES.
 
 1. Mapa generado como ej1_heatmap_correlacion.png
 2. Respondido en la pregunta 1.3.
-3. Las columnas con mayor colinealidad son perceived_productivity_score y actual_productivity_score con un r = 0.9013. Para un estudio, cualquiera de las dos columnas nos valdría para entrenar un modelo, pero no ambas.
+3. Las columnas con mayor colinealidad son perceived_productivity_score y actual_productivity_score con un r = 0.96. Para un estudio, cualquiera de las dos columnas nos valdría para entrenar un modelo, pero no ambas.
 
 ##
 
@@ -67,7 +67,7 @@ E. CORRELACIONES.
 
 **Pregunta 1.3** — ¿Qué tres variables numéricas tienen mayor correlación (en valor absoluto) con la variable objetivo? Indica los coeficientes.
 
-> Solo hay dos variables que tienen una fuerte correlación con la variable objetivo: perceived_prouctivity_score con una correlcion del 0.79 puntos y actual_productivity_score de 0.81 puntos, lo que indica una gran correlación con la satisfacción laboral con la productividad percibida y la productividad actual: a mayor productividad, mayor satisfacción. A parte de esto, las únicas otras variables que tienen correlación son actual_productivity_Score con perceived_productivity_score, esto nos muestra que la productividad percibida tiene la misma tendencia que la productividad real.
+> Solo hay dos variables que tienen una fuerte correlación con la variable objetivo: perceived_prouctivity_score con una correlacion del 0.85 puntos y actual_productivity_score de 0.88 puntos, lo que indica una gran correlación con la satisfacción laboral con la productividad percibida y la productividad actual: a mayor productividad, mayor satisfacción. A parte de esto, las únicas otras variables que tienen correlación son actual_productivity_Score con perceived_productivity_score, esto nos muestra que la productividad percibida tiene la misma tendencia que la productividad real.
 
 **Pregunta 1.4** — ¿Hay valores nulos en el dataset? ¿Qué porcentaje representan y cómo los has tratado?
 
@@ -80,15 +80,9 @@ Aunque la mayoria de las columnas no tienen nulos, hay 6 que sí.
     sleep_hours: 8.66%
     screen_time_before_sleep: 7.37%
     job_satisfaction_score: 9.10%
-    Y tenemos solo 17.074 filas sin ningún nulo. En este caso, al ser un dataset grande y pocos nulos (menos del 10% en 6 columnas), vamos a daily_social_media_time que tiene un skewness muy alto (1.25), lo que nos da una pista de que usar la media con esta columna nos va a dar un número sesgado.
-    En las columnas que nos interesan, los nulos se van a rellenar con los siguientes datos:
-    daily_social_media_time: 3.03
-    actual_productivity_score: 4.95
-    stress_level: 5.51
-    sleep_hours: 6.50
-    screen_time_before_sleep: 1.02
-    job_satisfaction_score: 4.96
-    Nulos después de rellenar con medias: 0.
+    Y tenemos solo 17.074 filas sin ningún nulo.
+    Lo que se ha hecho ha sido eliminar las filas con nulos para que no haya sesgos en el modelo.
+
 
 ---
 
@@ -99,29 +93,29 @@ Aunque la mayoria de las columnas no tienen nulos, hay 6 que sí.
 A. PREPROCESAMIENTO
 
 1. He eliminado la columna de perceived_productivity_score por tener multicolinealidad con la actual_productivity_score, he codificado las variables categoricas con get_dummies usando drop_first=True para evitar redundancias, además con las categóricas booleanas las he pasado a 0 y 1(astype(int)), y escalado con StandardScaler para evitar que el modelo piense que es más importante una variable que otra (por ejemplo la cantidad de notificaciones puede ser muy superior a tener una determinada edad). Además, he escalado después de la división de train para que no se filtre la información antes de entrenar el modelo, que lo hará a ciegas.
-2. He aplicado la división con train_est_split con un random_state de 42. En total 24000 filas para entrenar (80%) y 6000 para testear (20%).
+2. He aplicado la división con train_est_split con un random_state de 42. En total 13659 filas para entrenar (80%) y 3415 para testear (20%).
 
 B. MODELO B - REGRESION LINEAL
 
 1. He entrenado el modelo usando X_train e X_test, he generado y_pred_lr (los datos predichos) en base a X_test_scaled.
 2. Respondido en la pregunta 2.1.
-3. Gráfico generado como ej2_residuos.png. Al observar el gráfico lo que vemos a primera vista es una nube de puntos alrededor de la linea roja, esto nos confirma que hay homocedastividadd: el modelo acierta prediciendo tanto a gente muy satisfecha con su trabajo como a gente que no lo es, y a la vez se equivoca de manera equilibrada. Lo segundo que vemos es una linea recta vertical en el centro de la gráfica: hay ciertas personas que el modelo no ha podido predecir, son aquellas personas que a pesar de tener buenas condiciones en sus categorias puntuan a la baja su satisfaccion en el trabajo y viceversa. Lo tercero es la diagonal: y es que hay que tener en cuenta que antes teniamos en el dataset casi un 10% de nulos en la variable de job_satisfaccion_score, al rellenarlos con su media (4.96), ese 10% va a generar una linea diagonal perfecta (si el modelo por ejemplo dice que esa persona tendría una satisfacción de 2 y la realidad es que tiene 4.96, se va a ir 2.96 puntos para arriba, y así con todos los demás). En otro contexto, se podría usar el modelo para "adivinar" estos datos nulos.
+3. Gráfico generado como ej2_residuos.png. Al observar el gráfico lo que vemos a primera vista es una nube de puntos alrededor de la linea roja, esto nos confirma que hay homocedastividadd: el modelo acierta prediciendo tanto a gente muy satisfecha con su trabajo como a gente que no lo es, y a la vez se equivoca de manera equilibrada. 
 4. Como lo comentado en la pregunta 2.1, el modelo es bueno, tiene un desempeño notable a la hora de predecir, teniendo en cuenta que la satisfacción laboral puede ser determinada por otras cuestiones que no existen en el dataset (salario, relación con compañeros/jefes, ambiente laboral, cantidad de vacaciones al año...).
-   No hay underfitting: r2 por encima del 0.5, lo que indica que es capaz de ver la estructura y tendencia de los datos. Tampoco hay overfitting: el modelo rinde bien con el 20% de los datos (r2= 0.65). Aquí no tenemos varias variables, tenemos una que es la que más nos dice de la satisfacción en el trabajo: actual_productivity_score, con 1.63 puntos. Eso quiere decir que a más producción, mayor satisfacción. Tenemos otras variables mucho más pequeñas detrás de esta variable: el uso de Telegram (0.021) y trabajar en IT (0.018), lo cual no cambia mucho a la hora de tener mayor satisfacción laboral.
+   No hay underfitting: r2 por encima del 0.5, lo que indica que es capaz de ver la estructura y tendencia de los datos. Tampoco hay overfitting: el modelo rinde bien con el 20% de los datos (r2= 0.78). Aquí no tenemos varias variables, tenemos una que es la que más nos dice de la satisfacción en el trabajo: actual_productivity_score, con 1.87 puntos. Eso quiere decir que a más producción, mayor satisfacción. Tenemos otras variables mucho más pequeñas detrás de esta variable: ser hombre (0.020) y la cantidad de tiempo usado en RRSS (0.018), lo cual no cambia mucho a la hora de tener mayor satisfacción laboral.
 
 C. CONCLUSIONES.
 El modelo funciona correctamente. A pesar de que la mayoría de las variables no están correlacionadas con la satisfacción en el trabajo, también nos muestra información muy valiosa: no importa el genero, la edad, el estrés, el tipo de trabajo, el uso de redes sociales o el sueño entre otras variables para sentir satisfacción en el trabajo, lo que realmente importa es la productividad del trabajador para sentirse satisfecho.
-Es importante también señalar que esto solo nos lo explica al 65%, el 35% restante podría tener más peso: un buen salario, un buen ambiente en el trabajo puede hacer que la satisfacción mejore en gran medida (o no), lo cual seguramente sería una mejora significativa en el dataset. Em este caso, nuestro intercepto es 4.96, un 5 raspado en nuestra score: si todo lo demás fallara, seguiriamos asumiendo una nota de 5 en nuestra satisfacción laboral, y por cada punto que añadamos en nuestra productividad, esa nota subirá un 1.63.
+Es importante también señalar que esto solo nos lo explica al 78%, el 22% restante podría tener más peso: un buen salario, un buen ambiente en el trabajo puede hacer que la satisfacción mejore en gran medida (o no), lo cual seguramente sería una mejora significativa en el dataset. Em este caso, nuestro intercepto es 4.96, un 5 raspado en nuestra score: si todo lo demás fallara, seguiriamos asumiendo una nota de 5 en nuestra satisfacción laboral, y por cada punto que añadamos en nuestra productividad, esa nota subirá un 1.87.
 Sin duda, y tras analizar los errores del modelo y ver que funciona correctamente, la información más util es la de la importancia de las variables, pues con ellas podemos trabajar: si tuvieramos un departamento de RRHH con esta información, podríamos enfocar los flujos de trabajo con la productividad, incluso añadiendo recompensas por dicha productividad, ya que a mayor ssatisfacción en el trabajo, menor rotación de empleados, mayor compromiso con la empresa, el proyecto...
 
 ---
 
 **Pregunta 2.1** — Indica los valores de MAE, RMSE y R² de la regresión lineal sobre el test set. ¿El modelo funciona bien? ¿Por qué?
 
-El calculo de R2 es de 0.65, no es 100% perfecto pero se acerca mucho. Es mejor que usar solo la media sin duda.
-Respecto al MAE: nos alejamos casi 1 punto respecto al valor predicho, además, al ser el IQR de nuestra variable un 2.88 estamos dentro de ese porcentaje, con lo que podemos sentirnos tranquilos con el error.
-Respecto al RMSE: 1.19, lo que se considera que los errores son bastante consistentes, sobre todo respecto al MAE, siempre el modelo se va a equivocar alrededor de 1 punto.
-Por lo general, nuestro modelo predice muy bien nuestra variable objetivo: explica el 65% de lo que a una persona le hace estar satisfecha en el trabajo, en promedio se queda a menos de 1 punto de la realidad, y no se sugiere que el modelo tenga grandes errores con datos atípicos grandes que desvien las predicciones.
+El calculo de R2 es de 0.78, no es 100% perfecto pero se acerca mucho. Es mejor que usar solo la media sin duda.
+Respecto al MAE: nos alejamos casi 1 punto (0.79)respecto al valor predicho, además, al ser el IQR de nuestra variable un 3.26 estamos dentro de ese porcentaje, con lo que podemos sentirnos tranquilos con el error.
+Respecto al RMSE: 0.99, lo que se considera que los errores son bastante consistentes, sobre todo respecto al MAE, siempre el modelo se va a equivocar alrededor de 1 punto.
+Por lo general, nuestro modelo predice muy bien nuestra variable objetivo: explica el 78% de lo que a una persona le hace estar satisfecha en el trabajo, en promedio se queda a menos de 1 punto de la realidad, y no se sugiere que el modelo tenga grandes errores con datos atípicos grandes que desvien las predicciones.
 
 ---
 
